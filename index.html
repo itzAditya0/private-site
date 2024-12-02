@@ -3,80 +3,85 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Login to Private Section</title>
+        <title>Login - Private Section</title>
         <style>
+            /* General Styles */
+            :root {
+                --background-color: #2a2a2a;
+                --text-color: #ffffff;
+                --accent-color: #61dafb;
+                --error-color: #ff6b6b;
+                --input-bg: #1e1e1e;
+                --input-border: #3a3a3a;
+            }
             body {
-                font-family: Arial, sans-serif;
+                font-family: "Roboto", sans-serif;
+                margin: 0;
+                height: 100vh;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 100vh;
-                margin: 0;
-                background: #f4f4f9;
+                background-color: var(--background-color);
+                color: var(--text-color);
             }
             .login-container {
-                background: #fff;
+                background-color: #1e1e1e;
                 padding: 20px;
-                border-radius: 5px;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
                 text-align: center;
-                max-width: 400px;
-                width: 100%;
+                width: 300px;
+            }
+            h2 {
+                margin-bottom: 20px;
+                color: var(--text-color);
             }
             input {
-                width: 90%;
+                width: 100%;
                 padding: 10px;
                 margin: 10px 0;
-                border: 1px solid #ddd;
-                border-radius: 5px;
-                font-size: 16px;
+                border: 1px solid var(--input-border);
+                border-radius: 4px;
+                background-color: var(--input-bg);
+                color: var(--text-color);
+                font-size: 14px;
             }
             button {
-                width: 95%;
-                padding: 10px 20px;
+                width: 100%;
+                padding: 10px;
                 border: none;
-                background-color: #007bff;
-                color: white;
-                border-radius: 5px;
-                cursor: pointer;
+                border-radius: 4px;
+                background-color: var(--accent-color);
+                color: var(--background-color);
                 font-size: 16px;
+                font-weight: bold;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
             }
             button:hover {
-                background-color: #0056b3;
+                background-color: #5fc7e9;
             }
             #error-message {
-                color: red;
                 margin-top: 10px;
+                color: var(--error-color);
                 display: none;
             }
         </style>
     </head>
     <body>
         <div class="login-container">
-            <h2>Login to Private Section</h2>
-            <input
-                type="text"
-                id="username"
-                placeholder="Enter Username"
-                required
-            />
-            <input
-                type="password"
-                id="password"
-                placeholder="Enter Password"
-                required
-            />
+            <h2>Login</h2>
+            <input type="text" id="username" placeholder="Username" />
+            <input type="password" id="password" placeholder="Password" />
             <button onclick="login()">Login</button>
-            <p id="error-message">
-                Invalid username or password. Please try again.
-            </p>
+            <p id="error-message">Invalid username or password.</p>
         </div>
 
         <script>
-            // Replace these credentials with your own
+            // Replace these with your actual credentials
             const credentials = {
-                username: "User",
-                password: "Pass",
+                username: "user",
+                password: "pass123",
             };
 
             function login() {
@@ -88,17 +93,13 @@
                     .value.trim();
                 const errorMessage = document.getElementById("error-message");
 
-                // Simple client-side credential check
                 if (
                     username === credentials.username &&
                     password === credentials.password
                 ) {
-                    // Save login status
                     sessionStorage.setItem("isLoggedIn", "true");
-                    // Redirect to private content
                     window.location.href = "private.html";
                 } else {
-                    // Show error message
                     errorMessage.style.display = "block";
                 }
             }
