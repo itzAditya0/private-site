@@ -1,7 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['loggedin'])) {
-    header("Location: index.html"); // Redirect to login page
+if (!isset($_SESSION["loggedin"])) {
+    header("Location: index.html");
     exit();
 }
 ?>
@@ -15,30 +15,26 @@ if (!isset($_SESSION['loggedin'])) {
         body {
             font-family: Arial, sans-serif;
             text-align: center;
-            padding: 20px;
-        }
-        h1 {
-            color: #007BFF;
+            margin-top: 50px;
         }
         .logout {
-            padding: 10px 20px;
             background-color: #FF4136;
             color: white;
+            padding: 10px 20px;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
-    <h1>Welcome to Your Private Section</h1>
-    <p>This content is only visible to logged-in users.</p>
+    <h1>Welcome, <?php echo htmlspecialchars($_SESSION["username"]); ?>!</h1>
+    <p>This is a private section of the website.</p>
     <button class="logout" onclick="logout()">Logout</button>
 
     <script>
         function logout() {
-            fetch("logout.php").then(() => {
-                window.location.href = "index.html";
-            });
+            fetch("logout.php").then(() => window.location.href = "index.html");
         }
     </script>
 </body>

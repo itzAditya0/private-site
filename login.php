@@ -2,24 +2,45 @@
 session_start();
 
 // Database connection details
-$host = "145.223.17.62"; // or your server IP
+$host = "localhost"; // or your server IP
 $db = "u390136364_secure_login";
 $user = "u390136364_root";
 $password = "8ph?89ClzUm~";
 
+// Connect to the database
 $conn = new mysqli($host, $user, $password, $db);
-
-// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    die(
+        json_encode([
+            "status" => "error",
+            "message" => "Database connection failed: " . $conn->connect_error,
+        ])
+    );
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+// Process POST request
+if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    $username = $_POST["username"] ?? null;
+    $password = $_POST["password"] ?? null;
 
-    // Prepare and execute query
+    if (!$username || !$password) {
+        die(
+            json_encode([
+                "status" => "error",
+                "message" => "Missing credentials.",
+            ])
+        );
+    }
+
     $stmt = $conn->prepare("SELECT password FROM users WHERE username = ?");
+    if (!$stmt) {
+        die(
+            json_encode([
+                "status" => "error",
+                "message" => "Query preparation failed: " . $conn->error,
+            ])
+        );
+    }
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $stmt->store_result();
@@ -28,15 +49,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->bind_result($hashed_password);
         $stmt->fetch();
 
-        // Verify password
         if (password_verify($password, $hashed_password)) {
-            $_SESSION['loggedin'] = true;
+            $_SESSION["loggedin"] = true;
+            $_SESSION["username"] = $username;
             echo json_encode(["status" => "success"]);
         } else {
-            echo json_encode(["status" => "error", "message" => "Invalid username or password."]);
+            echo json_encode([
+                "status" => "error",
+                "message" => "Invalid username or password.",
+            ]);
         }
     } else {
-        echo json_encode(["status" => "error", "message" => "Invalid username or password."]);
+        echo json_encode(["status" => "error", "message" => "No such user."]);
     }
 
     $stmt->close();
